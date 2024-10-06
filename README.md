@@ -1,4 +1,7 @@
+Mirror of https://gitlab.com/relatived/rpi-nx-rcm
+
 # rpi-nx-rcm
+
 Open source Raspberry Pi Nintendo Switch RCM dongle built around fusee-launcher
 
 # Big Features
