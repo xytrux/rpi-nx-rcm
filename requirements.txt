@@ -1,0 +1,4 @@
+pyusb
+flask
+Jinja2
+tinydb

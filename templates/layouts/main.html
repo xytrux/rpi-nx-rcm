@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+  ██▀███   ██▓███   ██▓
+  ▓██ ▒ ██▒▓██░  ██▒▓██▒
+  ▓██ ░▄█ ▒▓██░ ██▓▒▒██▒
+  ▒██▀▀█▄  ▒██▄█▓▒ ▒░██░
+  ░██▓ ▒██▒▒██▒ ░  ░░██░
+  ░ ▒▓ ░▒▓░▒▓▒░ ░  ░░▓  
+    ░▒ ░ ▒░░▒ ░      ▒ ░
+    ░░   ░ ░░        ▒ ░
+    ░               ░  
+                      
+    ███▄    █ ▒██   ██▒      
+    ██ ▀█   █ ▒▒ █ █ ▒░      
+   ▓██  ▀█ ██▒░░  █   ░      
+   ▓██▒  ▐▌██▒ ░ █ █ ▒       
+   ▒██░   ▓██░▒██▒ ▒██▒      
+   ░ ▒░   ▒ ▒ ▒▒ ░ ░▓ ░      
+   ░ ░░   ░ ▒░░░   ░▒ ░      
+      ░   ░ ░  ░    ░        
+            ░  ░    ░        
+ ██▀███   ▄████▄   ███▄ ▄███▓
+▓██ ▒ ██▒▒██▀ ▀█  ▓██▒▀█▀ ██▒
+▓██ ░▄█ ▒▒▓█    ▄ ▓██    ▓██░
+▒██▀▀█▄  ▒▓▓▄ ▄██▒▒██    ▒██ 
+░██▓ ▒██▒▒ ▓███▀ ░▒██▒   ░██▒
+░ ▒▓ ░▒▓░░ ░▒ ▒  ░░ ▒░   ░  ░
+  ░▒ ░ ▒░  ░  ▒   ░  ░      ░
+  ░░   ░ ░        ░      ░   
+   ░     ░ ░             ░   
+         ░                   
+  
+  Credits to: 
+    * reswitched team (for discovering the Fusée Gelée exploit chain, developing Fusée Launcher, reswitched.tech, github.com/reswitched)
+    * Materialize CSS (materializecss.com)
+    * Developers and contributors of Flask and Jinja2 (flask.pocoo.org / jinja.pocoo.org)
+    * Raspberry Pi Foundation (logo basis, hardware which this is based on, raspberrypi.org)
+    * Nintendo (for making the switch, the switch logo, nintendo.com)
+    * You (for using this)
+
+  https://gitlab.com/relatived/rpi-nx-rcm
+  -->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <style>
+      nav .nav-wrapper .brand-logo img {
+        display: inline-block;
+        height: 56px;
+      }
+      nav .nav-wrapper .brand-text {
+        position: absolute;
+        color: #fff;
+        display: block;
+        font-size: 2.1rem;
+        padding: 0 0 0 56px;
+        visibility: hidden;
+      }
+      @media only screen and (min-width: 601px) {
+        nav .nav-wrapper .brand-text {
+          padding: 0 0 0 64px;
+          visibility: visible;
+        }
+        nav .nav-wrapper .brand-logo img {
+          height: 64px;
+        }
+      }
+    </style>
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <nav class="deep-purple lighten-1" role="navigation">
+      <div class="nav-wrapper container">
+        <a href="/" class="brand-logo"><img src="https://i.imgur.com/SdXuV75.png"></a>
+        <a href="/" class="brand-text">rpi-nx-rcm</a>
+
+        <ul class="right hide-on-med-and-down">
+          <li><a href="/">Home</a></li>
+        </ul>
+        <ul id="nav-mobile" class="sidenav">
+          <li><a href="/">Home</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      </div>
+
+    </nav>
+    <div class="container">
+      {% block content %}{% endblock %}
+      <div class="tap-target deep-purple white-text" data-target="fabbtn">
+        <div class="tap-target-content">
+          <h4>Publish Payloads</h4>
+          <p>Click this button and press the publish button that appears above it to publish a payload to the Raspberry Pi</p>
+        </div>
+      </div>
+      <div class="fixed-action-btn">
+        <a id="fabbtn" class="waves-effect waves-light btn btn-floating btn-large deep-purple">
+          <i class="large material-icons">add</i>
+        </a>
+        <ul>
+          <li><a class="btn-floating deep-purple darken-2"><i class="material-icons">publish</i></a></li>
+        </ul>
+      </div>       
+    </div>
+    <!-- JavaScript -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/SimpleStore.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <script>
+            M.toast({
+              html: `{{message}}`,
+              displayLength: 10000,
+              classes: `{% if category == 'error' %} 
+              red darken-3 
+              {% elif category == 'warning' %}
+              orange darken-3
+              {% endif %}`
+            })
+          </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block js %}{% endblock %}
+  </body>
+</html>
